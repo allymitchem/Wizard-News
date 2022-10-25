@@ -1,20 +1,19 @@
 const express = require("express");
 const morgan = require("morgan");
-const postBank = require('./postBank');
+const postBank = require("./postBank");
 
 const app = express();
-app.use(morgan('dev'))
-app.use(express.static('public'))
+app.use(morgan("dev"));
+app.use(express.static("public"));
 
 // app.get( '/posts/:id', (req, res) => {
 //   console.log( req.params.id ); // --> '7'
 // });
 
+app.get("/", (req, res) => {
+  const posts = postBank.list();
 
-app.get("/" , (req, res) => {
-  const posts = postBank.list()
-
-const html = `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html>
   <head>
     <title>Wizard News</title>
@@ -24,7 +23,9 @@ const html = `<!DOCTYPE html>
     <div class="news-list">
       <header><img src=
       "/logo.png"/>Wizard News</header>
-        ${posts.map(post => `
+        ${posts
+          .map(
+            (post) => `
           <div class='new-item'>
             <p>
               <span class="news=position">${post.id}. ▲ </span>
@@ -35,18 +36,22 @@ const html = `<!DOCTYPE html>
               ${post.upvotes} upvotes | ${post.date}
             </small>
           </div>`
-        ).join('')}
+          )
+          .join("")}
     </div>
   </body>
-</html>`
+</html>`;
 
-res.send(html)
-})
+  res.send(html);
+});
 
-app.get('/posts/:id', (req, res) => {
+app.get("/posts/:id", (req, res) => {
   const id = req.params.id;
   const post = postBank.find(id);
 
+  if (!post.id) {
+    throw new Error("error here");
+  }
   const html = `<!DOCTYPE html>
   <html>
     <head>
@@ -62,40 +67,24 @@ app.get('/posts/:id', (req, res) => {
     <h2>${post.content}</h2>
     </body>
   </html>
-  `
-
-  // const html = 
-  // `<!DOCTYPE html>
-  // <html>
-  //   <head>
-  //     <title>Wizard News</title>
-  //     <link rel="stylesheet" href="/style.css"/>
-  //   </head>
-  //   <body>
-  //     <div class="news-list">
-  //       <header><img src=
-  //       "/logo.png"/>Wizard News</header>
-  //         ${posts.map(post => `
-  //           <div class='new-item'>
-  //             <p>
-  //               <span class="news=position">${post.id}. ▲ </span>
-  //               <a href="/posts/${post.id}">${post.title}</a>
-  //               <small>(by ${post.name})</small>
-  //             </p>
-  //             <small class="news-info">
-  //               ${post.upvotes} upvotes | ${post.date}
-  //             </small>
-  //           </div>`
-  //         ).join('')}
-  //     </div>
-  //   </body>
-  // </html>`
+  `;
 
   res.send(html);
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  const html = `<!DOCTYPE html>
+  <html>
+    <h2>Accio Page! 🧙‍♀️ ... Page Not Found </h2>
+    <img src="/CatWizard.png"/>
+  </html>`;
+
+  res.status(404).send(html);
 });
 
 const PORT = 1337;
 
 app.listen(PORT, () => {
-  console.log(`App listening in port ${PORT}`, );
+  console.log(`App listening in port ${PORT}`);
 });
