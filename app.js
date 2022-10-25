@@ -1,15 +1,15 @@
 const express = require("express");
 const morgan = require("morgan");
 const postBank = require("./postBank");
-const timeAgo = require('node-time-ago');
-const routes = require("./routes/allPosts")
-
+// const timeAgo = require('node-time-ago');
+const routes = require("./routes/allPosts");
+const singleRoutes = require("./routes/singlePosts");
 
 const app = express();
 app.use(morgan("dev"));
 app.use(express.static("public"));
-app.use(routes)
-
+app.use(routes, singleRoutes);
+// app.use(singleRoutes)
 
 // app.get("/posts/:id", (req, res) => {
 //   const id = req.params.id;
@@ -38,9 +38,7 @@ app.use(routes)
 //   res.send(html);
 // });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-
+app.get("*", (req, res) => {
   const html = `<!DOCTYPE html>
   <html>
     <h2>Accio Page! 🧙‍♀️ ... Page Not Found </h2>
@@ -48,6 +46,18 @@ app.use((err, req, res, next) => {
   </html>`;
 
   res.status(404).send(html);
+});
+
+app.use((error, req, res, next) => {
+  // console.error(err.stack);
+  res.status(500).send({ error: error.name, message: error.message });
+  // const html = `<!DOCTYPE html>
+  // <html>
+  //   <h2>Accio Page! 🧙‍♀️ ... Page Not Found </h2>
+  //   <img src="/CatWizard.png"/>
+  // </html>`;
+
+  // res.status(404).send(html);
 });
 
 const PORT = 1337;
