@@ -1,8 +1,10 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 const morgan = require("morgan");
 const postBank = require("../postBank");
-const timeAgo = require('node-time-ago');
+const timeAgo = require("node-time-ago");
+
+const html = require("html-template-tag");
 
 const posts = postBank.list();
 
@@ -10,9 +12,7 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.static("public"));
 
-
-router.get("/", async(req, res) => {
-  
+router.get("/", async (req, res) => {
   const html = `<!DOCTYPE html>
 <html>
   <head>

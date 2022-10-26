@@ -81,3 +81,27 @@ textarea {
 .news-info {
   margin-left: 40px;
 }
+
+.images {
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  border-radius: 10px;
+  width:400px;
+}
+
+.background {
+  background-image: url("https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.tiP2dbEK8XSQ5IJJ0IjtlQHaEK%26pid%3DApi&f=1&ipt=f847236f698af28335d9853f6bc8f2ee3ff724294af5030c289c2420394a6062&ipo=images");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.messages {
+  display:flex;
+  justify-content: center;
+  color:darkslategray;
+}
+
+.errorMessage {
+  color:darkslategray;
+}
+
